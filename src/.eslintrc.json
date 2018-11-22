@@ -1,0 +1,9 @@
+{
+  "extends": "plugin:react/recommended",
+
+  "settings": {
+    "react": {
+      "version": "16.6.3"
+    }
+  }
+}

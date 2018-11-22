@@ -25,6 +25,12 @@ npm test
 This launches the test runner in the interactive watch mode.<br>
 See [this section](https://facebook.github.io/create-react-app/docs/running-tests) in the create-react-app docs for more information.
 
+## Linting
+Linting static analysis can be run with:
+```sh
+npm run lint
+```
+
 ## Architectural Decisions
 
 ### `npm` vs `yarn`
