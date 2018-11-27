@@ -1,0 +1,8 @@
+.Board {
+  display: flex;
+  flex-direction: column;
+}
+
+.Board-row {
+  display: flex;
+}

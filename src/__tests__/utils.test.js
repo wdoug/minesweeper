@@ -5,7 +5,8 @@ import {
   BOMB_KEY,
   copyBoard,
   shuffle,
-  createNewBoardWithBombs
+  createNewBoardWithBombs,
+  forEachSurroundingCell
 } from '../utils';
 
 describe('utils', () => {
@@ -33,6 +34,32 @@ describe('utils', () => {
       expect(original).toEqual(copy);
       expect(original).not.toBe(copy);
       original.forEach((row, idx) => expect(row).not.toBe(copy[idx]));
+    });
+  });
+
+  describe('forEachSurroundingCell', () => {
+    it('calls the callback 4 times on the corner of a board', () => {
+      const calls = [];
+      forEachSurroundingCell(createEmptyBoard(3, 3), 0, 2, (val, i, j) => {
+        calls.push([val, i, j]);
+      });
+      expect(calls.length).toBe(4);
+    });
+
+    it('calls the callback 6 times on the edge of a board', () => {
+      const calls = [];
+      forEachSurroundingCell(createEmptyBoard(3, 3), 1, 0, (val, i, j) => {
+        calls.push([val, i, j]);
+      });
+      expect(calls.length).toBe(6);
+    });
+
+    it('calls the callback 9 times in the middle of a board', () => {
+      const calls = [];
+      forEachSurroundingCell(createEmptyBoard(3, 3), 1, 1, (val, i, j) => {
+        calls.push([val, i, j]);
+      });
+      expect(calls.length).toBe(9);
     });
   });
 
@@ -132,10 +159,6 @@ describe('utils', () => {
   });
 
   describe('createNewBoard', () => {
-    beforeEach(() => {
-      // Math.random = jest().returns(0);
-    });
-
     it('throws an error if the number of bombs to add is greater than the number of cells in the board', () => {
       expect(() => createNewBoardWithBombs(2, 2, 5)).toThrow(
         'Tried to create a board with more bombs than possible. Expected a number of bombs between 0 and 4 but instead got 5'

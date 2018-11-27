@@ -1,9 +1,13 @@
 {
-  "extends": "plugin:react/recommended",
+  "extends": ["plugin:react/recommended", "plugin:jsx-a11y/recommended"],
 
   "settings": {
     "react": {
       "version": "16.6.3"
     }
+  },
+
+  "rules": {
+    "react/prop-types": "off"
   }
 }

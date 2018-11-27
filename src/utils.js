@@ -1,15 +1,49 @@
+/**
+ * Creates a new array with incrementing values from 0 to n - 1
+ * @param {number} n
+ */
 export function range(n) {
   return [...Array(n).keys()];
 }
 
 export const BOMB_KEY = 'BOMB';
 
+/**
+ * Creates a new board of xDim by yDim dimensions initialized to all 0s
+ * @param {number} xDim
+ * @param {number} yDim
+ */
 export function createEmptyBoard(xDim, yDim) {
   return range(yDim).map(() => range(xDim).map(() => 0));
 }
 
+/**
+ * Makes a new copy of a board
+ * @param {Array<Array<number|string>>} board
+ */
 export function copyBoard(board) {
   return board.map(row => row.map(val => val));
+}
+
+/**
+ * Iterates through the (up to 3x3) grid of surrounding cells including itself.
+ * Calls the provided function with the value of the cell and the location
+ * @param {Array<Array<number|string>>} board
+ * @param {number} x
+ * @param {number} y
+ * @param {Function} fn
+ */
+export function forEachSurroundingCell(board, x, y, fn) {
+  const xDim = board[0].length;
+  const yDim = board.length;
+
+  const xIndexes = [-1, 0, 1].map(i => x + i).filter(i => i >= 0 && i < xDim);
+  const yIndexes = [-1, 0, 1].map(j => y + j).filter(j => j >= 0 && j < yDim);
+  for (let j of yIndexes) {
+    for (let i of xIndexes) {
+      fn(board[j][i], i, j);
+    }
+  }
 }
 
 /**
@@ -51,16 +85,12 @@ export function addBombToBoard(board, x, y, mutate = false) {
   board[y][x] = BOMB_KEY;
 
   // Increment the count of surrounding non-bomb cells
-  const xIndexes = [-1, 0, 1].map(i => x + i).filter(i => i >= 0 && i < xDim);
-  const yIndexes = [-1, 0, 1].map(j => y + j).filter(j => j >= 0 && j < yDim);
-  for (let j of yIndexes) {
-    for (let i of xIndexes) {
-      const currVal = board[j][i];
-      if (currVal !== BOMB_KEY) {
-        board[j][i] += 1;
-      }
+  forEachSurroundingCell(board, x, y, (val, i, j) => {
+    if (val !== BOMB_KEY) {
+      board[j][i] += 1;
     }
-  }
+  });
+
   return board;
 }
 
