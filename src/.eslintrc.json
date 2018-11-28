@@ -1,5 +1,9 @@
 {
-  "extends": ["plugin:react/recommended", "plugin:jsx-a11y/recommended"],
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:jest/recommended"
+  ],
 
   "settings": {
     "react": {
@@ -9,5 +13,22 @@
 
   "rules": {
     "react/prop-types": "off"
-  }
+  },
+
+  "overrides": [
+    {
+      "files": "**/__tests__/**/*.js",
+      "env": {
+        "jest": true
+      },
+      "plugins": ["jest"],
+      "globals": {
+        "jest": true
+      },
+
+      "rules": {
+        "jest/prefer-spy-on": "warn"
+      }
+    }
+  ]
 }
