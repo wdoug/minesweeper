@@ -1,65 +1,40 @@
 import React from 'react';
-import {
-  createNewBoardWithBombs,
-  copyBoard,
-  forEachSurroundingCell,
-  BOMB_KEY
-} from './utils';
+import { copyBoard, forEachSurroundingCell } from './utils';
 import Card from './Card';
+import { NEXT_REVEAL_TIMEOUT } from './config';
 import './Board.css';
 
-const config = {
-  DEFAULT_X_DIM: 8,
-  DEFAULT_Y_DIM: 8,
-  DEFAULT_NUM_BOMBS: 10,
-  NEXT_REVEAL_TIMEOUT: 100
-};
-
-function getNewGameState(xDim, yDim, numBombs) {
-  const board = createNewBoardWithBombs(xDim, yDim, numBombs);
-  const revealedCards = board.map(row => row.map(value => false));
-  return { board, revealedCards };
+function getNewRevealedCards(board) {
+  return board.map(row => row.map(value => false));
 }
 
 class Board extends React.Component {
-  state = {
-    ...getNewGameState(
-      config.DEFAULT_X_DIM,
-      config.DEFAULT_Y_DIM,
-      config.DEFAULT_NUM_BOMBS
-    )
-  };
-  timeoutIds = [];
+  constructor(props, context) {
+    super(props, context);
 
-  componentDidMount() {
-    this._addCheats();
-  }
-
-  componentDidUpdate() {
-    this._addCheats();
-  }
-
-  _addCheats = () => {
-    window.cheat = window.cheat || {};
-    window.cheat.printBoard = () => {
-      // eslint-disable-next-line no-console
-      console.log(
-        this.state.board
-          .map(row => row.map(v => (v === BOMB_KEY ? 'X' : v)).join(' '))
-          .join('\n')
-      );
+    this.timeoutIds = [];
+    this.state = {
+      revealedCards: getNewRevealedCards(props.board)
     };
-  };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.board !== this.props.board) {
+      this.setState({
+        revealedCards: getNewRevealedCards(this.props.board)
+      });
+    }
+  }
 
   _getRevealCardCallback = (x, y) => () => {
     this._revealCards([[x, y]]);
   };
 
   _getNextCardsToReveal = (x, y) => {
-    const { board, revealedCards } = this.state;
+    const { revealedCards } = this.state;
     const nextCardsToReveal = [];
 
-    forEachSurroundingCell(board, x, y, (val, i, j) => {
+    forEachSurroundingCell(this.props.board, x, y, (val, i, j) => {
       if (!revealedCards[j][i]) {
         nextCardsToReveal.push([i, j]);
       }
@@ -77,7 +52,7 @@ class Board extends React.Component {
         if (!updatedRevealedCards[y][x]) {
           updatedRevealedCards[y][x] = true;
 
-          if (state.board[y][x] === 0) {
+          if (this.props.board[y][x] === 0) {
             nextCardsToReveal = nextCardsToReveal.concat(
               this._getNextCardsToReveal(x, y)
             );
@@ -89,7 +64,7 @@ class Board extends React.Component {
         this.timeoutIds.push(
           setTimeout(() => {
             this._revealCards(nextCardsToReveal);
-          }, config.NEXT_REVEAL_TIMEOUT)
+          }, NEXT_REVEAL_TIMEOUT)
         );
       }
 
@@ -106,7 +81,7 @@ class Board extends React.Component {
   render() {
     return (
       <div className="Board">
-        {this.state.board.map((row, j) => {
+        {this.props.board.map((row, j) => {
           return (
             <div key={j} className="Board-row">
               {row.map((value, i) => (

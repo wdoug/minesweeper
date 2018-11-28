@@ -3,7 +3,7 @@
   height: 3rem;
   width: 3rem;
   margin: 0.2rem;
-  perspective: 1000px;
+  perspective: 200px;
 }
 
 .Card {
@@ -12,6 +12,13 @@
   height: 100%;
   transition: transform 0.5s;
   transform-style: preserve-3d;
+}
+
+.Card-front:hover,
+.Card-front:active,
+.Card-front:focus {
+  transform: scale(1.1);
+  cursor: pointer;
 }
 
 .Card-front,
