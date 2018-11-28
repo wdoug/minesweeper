@@ -39,11 +39,11 @@
 }
 
 .Card-front {
-  background-color: #eee;
+  background-color: #ccf;
 }
 
 .Card-back {
-  background-color: #ccf;
+  background-color: #eee;
   color: black;
   transform: rotateY(180deg);
 }

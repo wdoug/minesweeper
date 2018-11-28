@@ -17,6 +17,12 @@ function getInitialState(board) {
   };
 }
 
+function isEveryNonBombRevealed(board, revealedCards) {
+  return board.every((row, j) =>
+    row.every((v, i) => v === BOMB_KEY || revealedCards[j][i])
+  );
+}
+
 class Board extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -78,9 +84,15 @@ class Board extends React.Component {
         );
       }
 
-      return {
+      const newState = {
         revealedCards: updatedRevealedCards
       };
+
+      if (isEveryNonBombRevealed(this.props.board, updatedRevealedCards)) {
+        newState.gameState = gameStates.SUCCEEDED;
+      }
+
+      return newState;
     });
   };
 

@@ -83,6 +83,31 @@ describe('when a bomb is revealed', () => {
   });
 });
 
+describe('when all non-bomb cards are revealed', () => {
+  let container, getByText;
+
+  beforeEach(() => {
+    let clickCard;
+    ({ container, clickCard, getByText } = renderBoard());
+    board.forEach((row, j) =>
+      row.forEach((v, i) => {
+        if (v !== BOMB_KEY) {
+          clickCard(i, j);
+        }
+      })
+    );
+  });
+
+  it('disables the ability to interact with the cards', () => {
+    const buttons = container.querySelectorAll('button');
+    expect([...buttons].every(b => b.disabled)).toBe(true);
+  });
+
+  it('shows the status as succeeded', () => {
+    expect(getByText(/status/i).textContent).toBe('Status: SUCCEEDED');
+  });
+});
+
 describe('when unmounted while revealing cards', () => {
   let originalSetTimeout = setTimeout.getMockImplementation();
 
