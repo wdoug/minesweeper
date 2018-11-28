@@ -25,3 +25,8 @@ it('calls onReveal on click', () => {
   fireEvent.click(container.querySelector('button'));
   expect(handleReveal).toHaveBeenCalledTimes(1);
 });
+
+it('disables the button when locked', () => {
+  const { container } = render(<Card value={5} locked />);
+  expect(container.querySelector('button').disabled).toBe(true);
+});

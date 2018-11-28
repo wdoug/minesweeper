@@ -57,13 +57,30 @@ it('reveals the cards when clicked', () => {
   expect(countRevealedCards()).toBe(2);
 });
 
-it('ends the game when a bomb is revealed', () => {});
-
 it('reveals the surrounding cards when revealing a card with no adjacent bombs', () => {
   const { countRevealedCards, clickCard } = renderBoard();
   clickCard(0, 0);
   jest.runAllTimers();
   expect(countRevealedCards()).toBe(6);
+});
+
+describe('when a bomb is revealed', () => {
+  let container, getByText;
+
+  beforeEach(() => {
+    let clickCard;
+    ({ container, clickCard, getByText } = renderBoard());
+    clickCard(2, 0);
+  });
+
+  it('disables the ability to interact with the cards', () => {
+    const buttons = container.querySelectorAll('button');
+    expect([...buttons].every(b => b.disabled)).toBe(true);
+  });
+
+  it('shows the status as failed', () => {
+    expect(getByText(/status/i).textContent).toBe('Status: FAILED');
+  });
 });
 
 describe('when unmounted while revealing cards', () => {

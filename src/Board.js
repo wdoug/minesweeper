@@ -1,11 +1,20 @@
 import React from 'react';
-import { copyBoard, forEachSurroundingCell } from './utils';
+import { copyBoard, forEachSurroundingCell, BOMB_KEY } from './utils';
 import Card from './Card';
 import { NEXT_REVEAL_TIMEOUT } from './config';
 import './Board.css';
 
-function getNewRevealedCards(board) {
-  return board.map(row => row.map(value => false));
+const gameStates = {
+  PLAYING: 'PLAYING',
+  FAILED: 'FAILED',
+  SUCCEEDED: 'SUCCEEDED'
+};
+
+function getInitialState(board) {
+  return {
+    revealedCards: board.map(row => row.map(value => false)),
+    gameState: gameStates.PLAYING
+  };
 }
 
 class Board extends React.Component {
@@ -13,21 +22,22 @@ class Board extends React.Component {
     super(props, context);
 
     this.timeoutIds = [];
-    this.state = {
-      revealedCards: getNewRevealedCards(props.board)
-    };
+    this.state = getInitialState(props.board);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.board !== this.props.board) {
-      this.setState({
-        revealedCards: getNewRevealedCards(this.props.board)
-      });
+      this.setState(getInitialState(this.props.board));
     }
   }
 
   _getRevealCardCallback = (x, y) => () => {
     this._revealCards([[x, y]]);
+    if (this.props.board[y][x] === BOMB_KEY) {
+      this.setState({
+        gameState: gameStates.FAILED
+      });
+    }
   };
 
   _getNextCardsToReveal = (x, y) => {
@@ -79,8 +89,12 @@ class Board extends React.Component {
   }
 
   render() {
+    const { gameState } = this.state;
+    const gameFinished =
+      gameState === gameStates.FAILED || gameState === gameStates.SUCCEEDED;
     return (
       <div className="Board">
+        <div>Status: {gameState}</div>
         {this.props.board.map((row, j) => {
           return (
             <div key={j} className="Board-row">
@@ -91,6 +105,7 @@ class Board extends React.Component {
                   revealed={this.state.revealedCards[j][i]}
                   onReveal={this._getRevealCardCallback(i, j)}
                   testid={`card-${i}-${j}`}
+                  locked={gameFinished}
                 />
               ))}
             </div>

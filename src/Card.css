@@ -14,9 +14,9 @@
   transform-style: preserve-3d;
 }
 
-.Card-front:hover,
-.Card-front:active,
-.Card-front:focus {
+.Card-front:hover:not([disabled]),
+.Card-front:active:not([disabled]),
+.Card-front:focus:not([disabled]) {
   transform: scale(1.1);
   cursor: pointer;
 }
