@@ -1,8 +1,10 @@
+export type Board = Array<Array<number | string>>;
+
 /**
  * Creates a new array with incrementing values from 0 to n - 1
  * @param {number} n
  */
-export function range(n) {
+export function range(n: number) {
   return [...Array(n).keys()];
 }
 
@@ -13,7 +15,7 @@ export const BOMB_KEY = 'BOMB';
  * @param {number} xDim
  * @param {number} yDim
  */
-export function createEmptyBoard(xDim, yDim) {
+export function createEmptyBoard(xDim: number, yDim: number) {
   return range(yDim).map(() => range(xDim).map(() => 0));
 }
 
@@ -21,7 +23,7 @@ export function createEmptyBoard(xDim, yDim) {
  * Makes a new copy of a board
  * @param {Array<Array<number|string>>} board
  */
-export function copyBoard(board) {
+export function copyBoard<T>(board: T[][]) {
   return board.map(row => row.map(val => val));
 }
 
@@ -33,7 +35,12 @@ export function copyBoard(board) {
  * @param {number} y
  * @param {Function} fn
  */
-export function forEachSurroundingCell(board, x, y, fn) {
+export function forEachSurroundingCell(
+  board: Board,
+  x: number,
+  y: number,
+  fn: (val: number | string, i: number, j: number) => void
+) {
   const xDim = board[0].length;
   const yDim = board.length;
 
@@ -57,7 +64,12 @@ export function forEachSurroundingCell(board, x, y, fn) {
  * @param {number} y
  * @param {boolean} mutate
  */
-export function addBombToBoard(board, x, y, mutate = false) {
+export function addBombToBoard(
+  board: Board,
+  x: number,
+  y: number,
+  mutate = false
+) {
   const xDim = board[0].length;
   const yDim = board.length;
   if (x < 0 || x >= xDim) {
@@ -87,7 +99,7 @@ export function addBombToBoard(board, x, y, mutate = false) {
   // Increment the count of surrounding non-bomb cells
   forEachSurroundingCell(board, x, y, (val, i, j) => {
     if (val !== BOMB_KEY) {
-      board[j][i] += 1;
+      (board[j][i] as number) += 1;
     }
   });
 
@@ -98,7 +110,7 @@ export function addBombToBoard(board, x, y, mutate = false) {
  * Randomly shuffles an array into a new array
  * @param {Array} arr
  */
-export function shuffle(arr) {
+export function shuffle(arr: any[]) {
   // TODO get a better implementation of this
   const arrCopy = arr.map(v => v);
   const shuffledArr = [];
@@ -118,7 +130,11 @@ export function shuffle(arr) {
  * @param {number} yDim
  * @param {number} numBombs
  */
-export function createNewBoardWithBombs(xDim, yDim, numBombs) {
+export function createNewBoardWithBombs(
+  xDim: number,
+  yDim: number,
+  numBombs: number
+): Board {
   if (numBombs > xDim * yDim) {
     throw new Error(
       `Tried to create a board with more bombs than possible. Expected a number of bombs between 0 and ${xDim *

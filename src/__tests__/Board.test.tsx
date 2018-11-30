@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from 'react-testing-library';
+import { render, fireEvent, getByTestId } from 'react-testing-library';
 import { BOMB_KEY } from '../utils';
 import Board from '../Board';
 
@@ -10,29 +10,39 @@ const board = [[0, 1, BOMB_KEY, 2       ],
                [0, 2, 3,        BOMB_KEY],
                [0, 1, BOMB_KEY, 2       ]];
 
+function countRevealedCards(container: HTMLElement) {
+  const buttons = container.querySelectorAll('button');
+  return Array.from(buttons).reduce(
+    (count, btn) => (btn.disabled ? count + 1 : count),
+    0
+  );
+}
+
+function getCard(container: HTMLElement, x: number, y: number) {
+  return getByTestId(container, `card-${x}-${y}`);
+}
+
+function clickCard(container: HTMLElement, x: number, y: number) {
+  const cardBtn = getByTestId(container, `card-${x}-${y}`).querySelector(
+    'button'
+  );
+
+  if (cardBtn) {
+    fireEvent.click(cardBtn);
+  } else {
+    throw new Error(`No card button to click at x: ${x}, y: ${y}`);
+  }
+}
+
 function renderBoard(ui = <Board board={board} />) {
   const rendered = render(ui);
   return {
     ...rendered,
 
     // Add custom functions for interacting with the rendered board
-    countRevealedCards() {
-      const buttons = rendered.container.querySelectorAll('button');
-      return [...buttons].reduce(
-        (count, btn) => (btn.disabled ? count + 1 : count),
-        0
-      );
-    },
-
-    getCard(x, y) {
-      return rendered.getByTestId(`card-${x}-${y}`);
-    },
-
-    clickCard(x, y) {
-      return fireEvent.click(
-        rendered.getByTestId(`card-${x}-${y}`).querySelector('button')
-      );
-    }
+    countRevealedCards: countRevealedCards.bind(null, rendered.container),
+    getCard: getCard.bind(null, rendered.container),
+    clickCard: clickCard.bind(null, rendered.container)
   };
 }
 
@@ -65,7 +75,8 @@ it('reveals the surrounding cards when revealing a card with no adjacent bombs',
 });
 
 describe('when a bomb is revealed', () => {
-  let container, getByText;
+  let container: HTMLElement,
+    getByText: (textmatch: string | RegExp) => HTMLElement;
 
   beforeEach(() => {
     let clickCard;
@@ -75,7 +86,7 @@ describe('when a bomb is revealed', () => {
 
   it('disables the ability to interact with the cards', () => {
     const buttons = container.querySelectorAll('button');
-    expect([...buttons].every(b => b.disabled)).toBe(true);
+    expect(Array.from(buttons).every(b => b.disabled)).toBe(true);
   });
 
   it('shows the status as failed', () => {
@@ -84,15 +95,15 @@ describe('when a bomb is revealed', () => {
 });
 
 describe('when all non-bomb cards are revealed', () => {
-  let container, getByText;
+  let container: HTMLElement,
+    getByText: (textmatch: string | RegExp) => HTMLElement;
 
   beforeEach(() => {
-    let clickCard;
-    ({ container, clickCard, getByText } = renderBoard());
+    ({ container, getByText } = renderBoard());
     board.forEach((row, j) =>
       row.forEach((v, i) => {
         if (v !== BOMB_KEY) {
-          clickCard(i, j);
+          clickCard(container, i, j);
         }
       })
     );
@@ -100,7 +111,7 @@ describe('when all non-bomb cards are revealed', () => {
 
   it('disables the ability to interact with the cards', () => {
     const buttons = container.querySelectorAll('button');
-    expect([...buttons].every(b => b.disabled)).toBe(true);
+    expect(Array.from(buttons).every(b => b.disabled)).toBe(true);
   });
 
   it('shows the status as succeeded', () => {
@@ -109,22 +120,26 @@ describe('when all non-bomb cards are revealed', () => {
 });
 
 describe('when unmounted while revealing cards', () => {
-  let originalSetTimeout = setTimeout.getMockImplementation();
+  // window.setTimeout is stubbed by calling jest.useFakeTimers() above
+  let originalSetTimeout = (window.setTimeout as any).getMockImplementation();
 
   beforeEach(() => {
     // Currently jest doesn't appear to expose a method to test that timeouts
     // have been cleared. See https://github.com/facebook/jest/issues/3949
     // This mocking allows us to test that the timeout is cleared before the
     // callback is executed
-    setTimeout.mockImplementation((cb, delay) =>
-      originalSetTimeout(() => {
-        throw new Error('timeout was not cleared');
-      }, delay)
+    ((setTimeout as unknown) as jest.Mock<number>).mockImplementation(
+      (cb, delay) =>
+        originalSetTimeout(() => {
+          throw new Error('timeout was not cleared');
+        }, delay)
     );
   });
 
   afterEach(() => {
-    setTimeout.mockImplementation(originalSetTimeout);
+    ((setTimeout as unknown) as jest.Mock<number>).mockImplementation(
+      originalSetTimeout
+    );
   });
 
   it('cleans up timeouts', () => {

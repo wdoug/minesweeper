@@ -1,7 +1,21 @@
 import React from 'react';
 import './Card.css';
 
-const Card = ({ value, revealed, onReveal, testid, locked }) => {
+type Props = {
+  value: number | string;
+  revealed?: boolean;
+  onReveal: () => void;
+  testid?: string;
+  locked?: boolean;
+};
+
+const Card: React.SFC<Props> = ({
+  value,
+  revealed,
+  onReveal,
+  testid,
+  locked
+}) => {
   return (
     <div className="Card-wrapper">
       <div

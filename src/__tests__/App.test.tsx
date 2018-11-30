@@ -48,14 +48,16 @@ describe('App functionality', () => {
 
   it('creates a new board with cards hidden when "Start new game" is clicked', () => {
     const { getByTestId, getByText } = render(<App />);
-    fireEvent.click(getByTestId('card-0-0').querySelector('button'));
-    expect(getByTestId('card-0-0').querySelector('button').disabled).toBe(true);
+    const cardBtn = getByTestId('card-0-0').querySelector('button');
+    if (!cardBtn) {
+      throw new Error('No card button to click at 0, 0');
+    }
+    fireEvent.click(cardBtn);
+    expect(cardBtn.disabled).toBe(true);
     expect(getByTestId('card-0-0').textContent).toBe('1');
 
     fireEvent.click(getByText('Start new game'));
-    expect(getByTestId('card-0-0').querySelector('button').disabled).toBe(
-      false
-    );
+    expect(cardBtn.disabled).toBe(false);
     expect(getByTestId('card-0-0').textContent).toBe('');
   });
 });

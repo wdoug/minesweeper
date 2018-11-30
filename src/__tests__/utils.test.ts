@@ -48,27 +48,27 @@ describe('copyBoard', () => {
 
 describe('forEachSurroundingCell', () => {
   it('calls the callback 4 times on the corner of a board', () => {
-    const calls = [];
+    let callCount = 0;
     forEachSurroundingCell(createEmptyBoard(3, 3), 0, 2, (val, i, j) => {
-      calls.push([val, i, j]);
+      callCount += 1;
     });
-    expect(calls.length).toBe(4);
+    expect(callCount).toBe(4);
   });
 
   it('calls the callback 6 times on the edge of a board', () => {
-    const calls = [];
+    let callCount = 0;
     forEachSurroundingCell(createEmptyBoard(3, 3), 1, 0, (val, i, j) => {
-      calls.push([val, i, j]);
+      callCount += 1;
     });
-    expect(calls.length).toBe(6);
+    expect(callCount).toBe(6);
   });
 
   it('calls the callback 9 times in the middle of a board', () => {
-    const calls = [];
+    let callCount = 0;
     forEachSurroundingCell(createEmptyBoard(3, 3), 1, 1, (val, i, j) => {
-      calls.push([val, i, j]);
+      callCount += 1;
     });
-    expect(calls.length).toBe(9);
+    expect(callCount).toBe(9);
   });
 });
 

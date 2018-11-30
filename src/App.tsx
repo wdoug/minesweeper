@@ -1,10 +1,25 @@
 import React, { Component } from 'react';
 import Board from './Board';
 import { DEFAULT_X_DIM, DEFAULT_Y_DIM, DEFAULT_NUM_BOMBS } from './config';
-import { createNewBoardWithBombs, BOMB_KEY } from './utils';
+import { createNewBoardWithBombs, BOMB_KEY, Board as BoardType } from './utils';
 import './App.css';
 
-class App extends Component {
+declare global {
+  interface Window {
+    cheat: any;
+  }
+}
+
+type State = {
+  nextGameSettings: {
+    xDim: number;
+    yDim: number;
+    numBombs: number;
+  };
+  board: BoardType;
+};
+
+class App extends Component<{}, State> {
   state = {
     nextGameSettings: {
       xDim: DEFAULT_X_DIM,
