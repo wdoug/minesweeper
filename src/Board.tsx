@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   copyBoard,
+  createNewBoardWithBombs,
   forEachSurroundingCell,
   BOMB_KEY,
   Board as BoardType
@@ -8,6 +9,12 @@ import {
 import Card from './Card';
 import { NEXT_REVEAL_TIMEOUT } from './config';
 import './Board.css';
+
+declare global {
+  interface Window {
+    cheat: any;
+  }
+}
 
 type RevealedCards = Array<Array<boolean>>;
 type GameStates = 'PLAYING' | 'FAILED' | 'SUCCEEDED';
@@ -18,8 +25,22 @@ const gameStates: { [key: string]: GameStates } = {
   SUCCEEDED: 'SUCCEEDED'
 };
 
-function getInitialState(board: BoardType) {
+type Props = {
+  xDim: number;
+  yDim: number;
+  numBombs: number;
+  gameKey: number;
+};
+type State = {
+  board: BoardType;
+  revealedCards: RevealedCards;
+  gameState: GameStates;
+};
+
+function getInitialState({ xDim, yDim, numBombs }: Props) {
+  const board = createNewBoardWithBombs(xDim, yDim, numBombs);
   return {
+    board,
     revealedCards: board.map(row => row.map(value => false)),
     gameState: gameStates.PLAYING
   };
@@ -34,14 +55,6 @@ function isEveryNonBombRevealed(
   );
 }
 
-type Props = {
-  board: BoardType;
-};
-type State = {
-  revealedCards: RevealedCards;
-  gameState: GameStates;
-};
-
 class Board extends React.Component<Props, State> {
   timeoutIds: number[];
 
@@ -49,29 +62,45 @@ class Board extends React.Component<Props, State> {
     super(props, context);
 
     this.timeoutIds = [];
-    this.state = getInitialState(props.board);
+    this.state = getInitialState(props);
+    this._addCheats();
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.board !== this.props.board) {
-      this.setState(getInitialState(this.props.board));
+    if (prevProps.gameKey !== this.props.gameKey) {
+      this.setState(getInitialState(this.props));
     }
+    this._addCheats();
   }
 
+  _addCheats = () => {
+    window.cheat = window.cheat || {};
+    window.cheat.printBoard = () => {
+      // eslint-disable-next-line no-console
+      console.log(
+        this.state.board
+          .map(row => row.map(v => (v === BOMB_KEY ? 'X' : v)).join(' '))
+          .join('\n')
+      );
+    };
+  };
+
   _getRevealCardCallback = (x: number, y: number) => () => {
+    // TODO move the x and y into the card itself
     this._revealCards([[x, y]]);
-    if (this.props.board[y][x] === BOMB_KEY) {
+    if (this.state.board[y][x] === BOMB_KEY) {
       this.setState({
         gameState: gameStates.FAILED
       });
     }
   };
 
+  // TODO: Move to utils
   _getNextCardsToReveal = (x: number, y: number) => {
-    const { revealedCards } = this.state;
+    const { revealedCards, board } = this.state;
     const nextCardsToReveal: Array<[number, number]> = [];
 
-    forEachSurroundingCell(this.props.board, x, y, (val, i, j) => {
+    forEachSurroundingCell(board, x, y, (val, i, j) => {
       if (!revealedCards[j][i]) {
         nextCardsToReveal.push([i, j]);
       }
@@ -83,13 +112,13 @@ class Board extends React.Component<Props, State> {
   _revealCards = (xyLocations: Array<[number, number]>) => {
     let nextCardsToReveal: Array<[number, number]> = [];
 
-    this.setState((state, props) => {
+    this.setState(state => {
       const updatedRevealedCards = copyBoard(state.revealedCards);
       xyLocations.forEach(([x, y]) => {
         if (!updatedRevealedCards[y][x]) {
           updatedRevealedCards[y][x] = true;
 
-          if (props.board[y][x] === 0) {
+          if (state.board[y][x] === 0) {
             nextCardsToReveal = nextCardsToReveal.concat(
               this._getNextCardsToReveal(x, y)
             );
@@ -110,7 +139,7 @@ class Board extends React.Component<Props, State> {
         revealedCards: updatedRevealedCards
       };
 
-      if (isEveryNonBombRevealed(this.props.board, updatedRevealedCards)) {
+      if (isEveryNonBombRevealed(state.board, updatedRevealedCards)) {
         newState.gameState = gameStates.SUCCEEDED;
       }
 
@@ -129,7 +158,7 @@ class Board extends React.Component<Props, State> {
     return (
       <div className="Board">
         <div>Status: {gameState}</div>
-        {this.props.board.map((row, j) => {
+        {this.state.board.map((row, j) => {
           return (
             <div key={j} className="Board-row">
               {row.map((value, i) => (

@@ -29,10 +29,7 @@ it('renders a board', () => {
 
 describe('App functionality', () => {
   beforeEach(() => {
-    jest
-      .spyOn(utils, 'createNewBoardWithBombs')
-      .mockImplementationOnce(() => mockBoard)
-      .mockImplementationOnce(() => mockBoard2);
+    jest.spyOn(utils, 'createNewBoardWithBombs');
   });
 
   afterEach(() => {
@@ -47,6 +44,10 @@ describe('App functionality', () => {
   });
 
   it('creates a new board with cards hidden when "Start new game" is clicked', () => {
+    jest
+      .spyOn(utils, 'createNewBoardWithBombs')
+      .mockImplementationOnce(() => mockBoard)
+      .mockImplementationOnce(() => mockBoard2);
     const { getByTestId, getByText } = render(<App />);
     const cardBtn = getByTestId('card-0-0').querySelector('button');
     if (!cardBtn) {
@@ -59,5 +60,27 @@ describe('App functionality', () => {
     fireEvent.click(getByText('Start new game'));
     expect(cardBtn.disabled).toBe(false);
     expect(getByTestId('card-0-0').textContent).toBe('');
+  });
+
+  it('has the option to create a new board with a different size', () => {
+    const { container, getByLabelText, getByText } = render(<App />);
+
+    const widthInput = getByLabelText('width');
+    fireEvent.change(widthInput, {
+      target: { value: '3', name: 'xDim' }
+    });
+    const heightInput = getByLabelText('height');
+    fireEvent.change(heightInput, {
+      target: { value: '5', name: 'yDim' }
+    });
+    const numBombsInput = getByLabelText('number of bombs');
+    fireEvent.change(heightInput, {
+      target: { value: '7', name: 'numBombs' }
+    });
+    fireEvent.click(getByText('Start new game'));
+
+    const buttons = container.querySelectorAll('.Board button');
+    expect(buttons.length).toBe(3 * 5);
+    expect(utils.createNewBoardWithBombs).toHaveBeenCalledWith(3, 5, 7);
   });
 });
