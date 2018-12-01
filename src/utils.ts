@@ -107,21 +107,30 @@ export function addBombToBoard(
 }
 
 /**
- * Randomly shuffles an array into a new array
+ * Returns a randomly shuffled version of an array (immutable by default)
  * @param {Array} arr
+ * @param {boolean} mutate
  */
-export function shuffle(arr: any[]) {
-  // TODO get a better implementation of this
-  const arrCopy = arr.map(v => v);
-  const shuffledArr = [];
-  while (arrCopy.length > 0) {
-    const randomRemainingValue = arrCopy.splice(
-      Math.floor(Math.random() * arrCopy.length),
-      1
-    )[0];
-    shuffledArr.push(randomRemainingValue);
+export function shuffle(arr: any[], mutate = false) {
+  if (!mutate) {
+    arr = arr.map(v => v);
   }
-  return shuffledArr;
+
+  // Fisher–Yates shuffle
+  let currentIndex = arr.length;
+
+  while (currentIndex > 0) {
+    // Pick random remaining element
+    const randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // swap with current index element
+    const tmp = arr[randomIndex];
+    arr[randomIndex] = arr[currentIndex];
+    arr[currentIndex] = tmp;
+  }
+
+  return arr;
 }
 
 /**

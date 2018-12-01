@@ -150,11 +150,17 @@ describe('shuffle', () => {
     jest.restoreAllMocks();
   });
 
-  it('does not mutate the array', () => {
+  it('does not mutate the array by default', () => {
     const originalArr = [1, 2, 3];
     const shuffledArr = shuffle(originalArr);
     expect(originalArr).toEqual([1, 2, 3]);
     expect(shuffledArr).not.toBe(originalArr);
+  });
+
+  it('can optionally mutate the array', () => {
+    const originalArr = [1, 2, 3];
+    const shuffledArr = shuffle(originalArr, true);
+    expect(shuffledArr).toBe(originalArr);
   });
 
   it('has the same values as the original array', () => {
@@ -167,13 +173,13 @@ describe('shuffle', () => {
   it('randomly shuffles the array', () => {
     expect(shuffle(range(7))).toMatchInlineSnapshot(`
 Array [
-  2,
-  0,
-  5,
-  3,
-  1,
   4,
   6,
+  5,
+  1,
+  3,
+  0,
+  2,
 ]
 `);
   });
