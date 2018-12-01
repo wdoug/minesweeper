@@ -54,11 +54,11 @@ describe('App functionality', () => {
       throw new Error('No card button to click at 0, 0');
     }
     fireEvent.click(cardBtn);
-    expect(cardBtn.disabled).toBe(true);
+    expect(cardBtn).toBeDisabled();
     expect(getByTestId('card-0-0').textContent).toBe('1');
 
     fireEvent.click(getByText('Start new game'));
-    expect(cardBtn.disabled).toBe(false);
+    expect(cardBtn).not.toBeDisabled();
     expect(getByTestId('card-0-0').textContent).toBe('');
   });
 

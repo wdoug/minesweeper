@@ -30,7 +30,7 @@ it('shows the value and is disabled when revealed', () => {
     <Card value={5} revealed onReveal={() => {}} />
   );
   expect(getByText('5')).toBeInTheDocument();
-  expect(getCardButton(container).disabled).toBe(true);
+  expect(getCardButton(container)).toBeDisabled();
 });
 
 it('calls onReveal on click', () => {
@@ -44,5 +44,5 @@ it('disables the button when locked', () => {
   const { container } = renderCard(
     <Card value={5} locked onReveal={() => {}} />
   );
-  expect(getCardButton(container).disabled).toBe(true);
+  expect(getCardButton(container)).toBeDisabled();
 });
