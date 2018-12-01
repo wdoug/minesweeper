@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, getByLabelText } from 'react-testing-library';
-import GameSettings from '../GameSettings';
+import GameSettings, { GameSettingsProps } from '../GameSettings';
 import { MAX_X_DIM, MAX_Y_DIM } from '../config';
 
 function setWidth(container: HTMLElement, value: number | string) {
@@ -22,8 +22,14 @@ function setNumBombs(container: HTMLElement, value: number | string) {
   return input;
 }
 
-function renderGameSettings(ui = <GameSettings onGameStart={() => {}} />) {
-  const rendered = render(ui);
+const standardProps = {
+  onGameStart: () => {}
+};
+
+function renderGameSettings(propOverrides?: Partial<GameSettingsProps>) {
+  const rendered = render(
+    <GameSettings {...standardProps} {...propOverrides} />
+  );
   return {
     ...rendered,
 
@@ -59,9 +65,9 @@ it.each(
 
 it('calls `onGameStart` when the button is clicked to start a new game', () => {
   const onGameStart = jest.fn();
-  const { setHeight, setWidth, setNumBombs, getByText } = renderGameSettings(
-    <GameSettings onGameStart={onGameStart} />
-  );
+  const { setHeight, setWidth, setNumBombs, getByText } = renderGameSettings({
+    onGameStart
+  });
   setWidth(3);
   setHeight(2);
   setNumBombs(1);
@@ -71,9 +77,9 @@ it('calls `onGameStart` when the button is clicked to start a new game', () => {
 
 it('calls `onGameStart` when the form is submitted', () => {
   const onGameStart = jest.fn();
-  const { container, setHeight, setWidth, setNumBombs } = renderGameSettings(
-    <GameSettings onGameStart={onGameStart} />
-  );
+  const { container, setHeight, setWidth, setNumBombs } = renderGameSettings({
+    onGameStart
+  });
   setWidth(3);
   setHeight(2);
   setNumBombs(1);

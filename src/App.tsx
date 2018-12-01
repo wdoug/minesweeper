@@ -4,14 +4,14 @@ import { DEFAULT_X_DIM, DEFAULT_Y_DIM, DEFAULT_NUM_BOMBS } from './config';
 import GameSettings from './GameSettings';
 import './App.css';
 
-type State = {
+type AppState = {
   xDim: number;
   yDim: number;
   numBombs: number;
   gameKey: number;
 };
 
-class App extends Component<{}, State> {
+class App extends Component<{}, AppState> {
   state = {
     xDim: DEFAULT_X_DIM,
     yDim: DEFAULT_Y_DIM,

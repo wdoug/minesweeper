@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from 'react-testing-library';
-import Card from '../Card';
+import Card, { CardProps } from '../Card';
 
 function getCardButton(container: HTMLElement) {
   const cardBtn = container.querySelector('button');
@@ -10,8 +10,15 @@ function getCardButton(container: HTMLElement) {
   return cardBtn;
 }
 
-function renderCard(ui = <Card value={5} onReveal={() => {}} />) {
-  return render(ui);
+const standardProps = {
+  value: 5,
+  onReveal: () => {},
+  x: 0,
+  y: 0
+};
+
+function renderCard(propOverrides?: Partial<CardProps>) {
+  return render(<Card {...standardProps} {...propOverrides} />);
 }
 
 it('renders a button for accessibility', () => {
@@ -26,23 +33,19 @@ it('does not show a value by default', () => {
 });
 
 it('shows the value and is disabled when revealed', () => {
-  const { container, getByText } = renderCard(
-    <Card value={5} revealed onReveal={() => {}} />
-  );
+  const { container, getByText } = renderCard({ revealed: true });
   expect(getByText('5')).toBeInTheDocument();
   expect(getCardButton(container)).toBeDisabled();
 });
 
 it('calls onReveal on click', () => {
   const handleReveal = jest.fn();
-  const { container } = renderCard(<Card value={5} onReveal={handleReveal} />);
+  const { container } = renderCard({ onReveal: handleReveal });
   fireEvent.click(getCardButton(container));
   expect(handleReveal).toHaveBeenCalledTimes(1);
 });
 
 it('disables the button when locked', () => {
-  const { container } = renderCard(
-    <Card value={5} locked onReveal={() => {}} />
-  );
+  const { container } = renderCard({ locked: true });
   expect(getCardButton(container)).toBeDisabled();
 });

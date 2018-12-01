@@ -11,6 +11,10 @@ const emptyBoard = createEmptyBoard(8, 8);
 const mockBoard = addBombToBoard(emptyBoard, 1, 1);
 const mockBoard2 = addBombToBoard(mockBoard, 1, 0);
 
+function renderApp() {
+  return render(<App />);
+}
+
 it('renders without crashing', () => {
   const div = document.createElement('div');
   ReactDOM.render(<App />, div);
@@ -18,12 +22,12 @@ it('renders without crashing', () => {
 });
 
 it('has an button to start a new game', () => {
-  const { getByText } = render(<App />);
+  const { getByText } = renderApp();
   expect(getByText('Start new game')).toBeInTheDocument();
 });
 
 it('renders a board', () => {
-  const { container } = render(<App />);
+  const { container } = renderApp();
   expect(container.querySelector('.Board')).toBeInTheDocument();
 });
 
@@ -37,7 +41,7 @@ describe('App functionality', () => {
   });
 
   it('initially creates an 8x8 board with 10 bombs', () => {
-    const { container } = render(<App />);
+    const { container } = renderApp();
     expect(utils.createNewBoardWithBombs).toHaveBeenCalledWith(8, 8, 10);
     const buttons = container.querySelectorAll('.Board button');
     expect(buttons.length).toBe(8 * 8);
@@ -48,7 +52,7 @@ describe('App functionality', () => {
       .spyOn(utils, 'createNewBoardWithBombs')
       .mockImplementationOnce(() => mockBoard)
       .mockImplementationOnce(() => mockBoard2);
-    const { getByTestId, getByText } = render(<App />);
+    const { getByTestId, getByText } = renderApp();
     const cardBtn = getByTestId('card-0-0').querySelector('button');
     if (!cardBtn) {
       throw new Error('No card button to click at 0, 0');
@@ -63,7 +67,7 @@ describe('App functionality', () => {
   });
 
   it('has the option to create a new board with a different size', () => {
-    const { container, getByLabelText, getByText } = render(<App />);
+    const { container, getByLabelText, getByText } = renderApp();
 
     const widthInput = getByLabelText('width');
     fireEvent.change(widthInput, {

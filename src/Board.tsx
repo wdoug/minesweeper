@@ -25,19 +25,19 @@ const gameStates: { [key: string]: GameStates } = {
   SUCCEEDED: 'SUCCEEDED'
 };
 
-type Props = {
+export type BoardProps = {
   xDim: number;
   yDim: number;
   numBombs: number;
   gameKey: number;
 };
-type State = {
+type BoardState = {
   board: BoardType;
   revealedCards: RevealedCards;
   gameState: GameStates;
 };
 
-function getInitialState({ xDim, yDim, numBombs }: Props) {
+function getInitialState({ xDim, yDim, numBombs }: BoardProps) {
   const board = createNewBoardWithBombs(xDim, yDim, numBombs);
   return {
     board,
@@ -55,10 +55,10 @@ function isEveryNonBombRevealed(
   );
 }
 
-class Board extends React.Component<Props, State> {
+class Board extends React.Component<BoardProps, BoardState> {
   timeoutIds: number[];
 
-  constructor(props: Props, context: object) {
+  constructor(props: BoardProps, context: object) {
     super(props, context);
 
     this.timeoutIds = [];
@@ -66,7 +66,7 @@ class Board extends React.Component<Props, State> {
     this._addCheats();
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: BoardProps) {
     if (prevProps.gameKey !== this.props.gameKey) {
       this.setState(getInitialState(this.props));
     }
@@ -85,8 +85,7 @@ class Board extends React.Component<Props, State> {
     };
   };
 
-  _getRevealCardCallback = (x: number, y: number) => () => {
-    // TODO move the x and y into the card itself
+  _revealCard = (x: number, y: number) => {
     this._revealCards([[x, y]]);
     if (this.state.board[y][x] === BOMB_KEY) {
       this.setState({
@@ -95,7 +94,6 @@ class Board extends React.Component<Props, State> {
     }
   };
 
-  // TODO: Move to utils
   _getNextCardsToReveal = (x: number, y: number) => {
     const { revealedCards, board } = this.state;
     const nextCardsToReveal: Array<[number, number]> = [];
@@ -166,9 +164,11 @@ class Board extends React.Component<Props, State> {
                   key={i}
                   value={value}
                   revealed={this.state.revealedCards[j][i]}
-                  onReveal={this._getRevealCardCallback(i, j)}
+                  onReveal={this._revealCard}
                   testid={`card-${i}-${j}`}
                   locked={gameFinished}
+                  x={i}
+                  y={j}
                 />
               ))}
             </div>

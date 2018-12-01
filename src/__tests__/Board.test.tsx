@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, getByTestId } from 'react-testing-library';
 import * as utils from '../utils';
-import Board from '../Board';
+import Board, { BoardProps } from '../Board';
 
 const { BOMB_KEY } = utils;
 
@@ -36,10 +36,15 @@ function clickCard(container: HTMLElement, x: number, y: number) {
   }
 }
 
-function renderBoard(
-  ui = <Board xDim={4} yDim={3} numBombs={3} gameKey={1} />
-) {
-  const rendered = render(ui);
+const standardProps = {
+  xDim: 4,
+  yDim: 3,
+  numBombs: 3,
+  gameKey: 1
+};
+
+function renderBoard(propOverrides?: Partial<BoardProps>) {
+  const rendered = render(<Board {...standardProps} {...propOverrides} />);
   return {
     ...rendered,
 

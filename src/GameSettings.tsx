@@ -7,7 +7,7 @@ import {
   MAX_Y_DIM
 } from './config';
 
-type GameSettingsProps = {
+export type GameSettingsProps = {
   onGameStart: (xDim: number, yDim: number, numBombs: number) => void;
 };
 type GameSettingsState = {

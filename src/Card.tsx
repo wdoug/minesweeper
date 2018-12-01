@@ -1,20 +1,24 @@
 import React from 'react';
 import './Card.css';
 
-type Props = {
+export type CardProps = {
   value: number | string;
   revealed?: boolean;
-  onReveal: () => void;
+  onReveal: (x: number, y: number) => void;
   testid?: string;
   locked?: boolean;
+  x: number;
+  y: number;
 };
 
-const Card: React.SFC<Props> = ({
+const Card: React.SFC<CardProps> = ({
   value,
   revealed,
   onReveal,
   testid,
-  locked
+  locked,
+  x,
+  y
 }) => {
   return (
     <div className="Card-wrapper">
@@ -24,7 +28,7 @@ const Card: React.SFC<Props> = ({
       >
         <button
           className="Card-front"
-          onClick={onReveal}
+          onClick={() => onReveal(x, y)}
           disabled={revealed || locked}
         />
         <div className="Card-back">{(revealed && value) || ''}</div>
