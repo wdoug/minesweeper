@@ -1,3 +1,4 @@
+![](https://travis-ci.com/wdoug/minesweeper.svg?branch=master)
 # Minesweeper
 
 ## Setup
