@@ -1,4 +1,5 @@
 import React from 'react';
+import { BOMB_KEY } from './utils';
 import './Card.css';
 
 export type CardProps = {
@@ -31,7 +32,13 @@ const Card: React.SFC<CardProps> = ({
           onClick={() => onReveal(x, y)}
           disabled={revealed || locked}
         />
-        <div className="Card-back">{(revealed && value) || ''}</div>
+        <div
+          className={`Card-back ${
+            revealed && value === BOMB_KEY ? 'is-bomb' : ''
+          }`}
+        >
+          {(revealed && value) || ''}
+        </div>
       </div>
     </div>
   );

@@ -155,7 +155,9 @@ class Board extends React.Component<BoardProps, BoardState> {
       gameState === gameStates.FAILED || gameState === gameStates.SUCCEEDED;
     return (
       <div className="Board">
-        <div>Status: {gameState}</div>
+        <div className={`Board-status is-${gameState}`}>
+          Status: {gameState}
+        </div>
         {this.state.board.map((row, j) => {
           return (
             <div key={j} className="Board-row">

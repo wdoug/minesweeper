@@ -6,6 +6,7 @@ import {
   MAX_X_DIM,
   MAX_Y_DIM
 } from './config';
+import './GameSettings.css';
 
 export type GameSettingsProps = {
   onGameStart: (xDim: number, yDim: number, numBombs: number) => void;
@@ -49,36 +50,41 @@ class GameSettings extends React.Component<
   render() {
     const { xDim, yDim, numBombs } = this.state;
     return (
-      <form onSubmit={this._startNewGame}>
+      <form className="GameSettings" onSubmit={this._startNewGame}>
         Board settings:
-        <label>
-          width
+        <label className="GameSettings-label">
+          width:
           <input
+            className="GameSettings-input"
             name="xDim"
             type="number"
             value={xDim}
             onChange={this._inputHandler}
           />
         </label>
-        <label>
-          height
+        <label className="GameSettings-label">
+          height:
           <input
+            className="GameSettings-input"
             name="yDim"
             type="number"
             value={yDim}
             onChange={this._inputHandler}
           />
         </label>
-        <label>
-          number of bombs
+        <label className="GameSettings-label">
+          number of bombs:
           <input
+            className="GameSettings-input"
             name="numBombs"
             type="number"
             value={numBombs}
             onChange={this._inputHandler}
           />
         </label>
-        <button type="submit">Start new game</button>
+        <button className="GameSettings-submit" type="submit">
+          Start new game
+        </button>
       </form>
     );
   }

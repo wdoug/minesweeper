@@ -8,7 +8,7 @@ export function range(n: number) {
   return [...Array(n).keys()];
 }
 
-export const BOMB_KEY = 'BOMB';
+export const BOMB_KEY = '💣';
 
 /**
  * Creates a new board of xDim by yDim dimensions initialized to all 0s

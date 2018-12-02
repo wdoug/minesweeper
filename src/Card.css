@@ -1,9 +1,18 @@
 .Card-wrapper {
   background-color: transparent;
-  height: 3rem;
-  width: 3rem;
-  margin: 0.2rem;
+  flex: 1 0 auto;
+  height: auto;
+  max-width: 4.5rem;
+  min-width: 1rem;
+  margin: 0.5%;
   perspective: 200px;
+}
+
+/* Make dymanic size square */
+.Card-wrapper:before {
+  content: '';
+  float: left;
+  padding-top: 100%;
 }
 
 .Card {
@@ -31,7 +40,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.5rem;
+  border-radius: 10%;
 }
 
 .Card.is-revealed {
@@ -46,4 +55,8 @@
   background-color: #eee;
   color: black;
   transform: rotateY(180deg);
+}
+
+.Card-back.is-bomb {
+  background-color: red;
 }

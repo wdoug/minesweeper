@@ -69,15 +69,15 @@ describe('App functionality', () => {
   it('has the option to create a new board with a different size', () => {
     const { container, getByLabelText, getByText } = renderApp();
 
-    const widthInput = getByLabelText('width');
+    const widthInput = getByLabelText(/width/);
     fireEvent.change(widthInput, {
       target: { value: '3', name: 'xDim' }
     });
-    const heightInput = getByLabelText('height');
+    const heightInput = getByLabelText(/height/);
     fireEvent.change(heightInput, {
       target: { value: '5', name: 'yDim' }
     });
-    const numBombsInput = getByLabelText('number of bombs');
+    const numBombsInput = getByLabelText(/number of bombs/);
     fireEvent.change(heightInput, {
       target: { value: '7', name: 'numBombs' }
     });

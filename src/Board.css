@@ -1,8 +1,28 @@
 .Board {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  text-align: center;
 }
 
 .Board-row {
   display: flex;
+}
+
+/* Similar to using 'justify-content: center' but without the risk of off-screen hidden overflow */
+.Board-row > *:first-child {
+  margin-left: auto;
+}
+.Board-row > *:last-child {
+  margin-right: auto;
+}
+
+.Board-status {
+  line-height: 2rem;
+}
+.Board-status.is-SUCCEEDED {
+  background-color: #9f9;
+}
+.Board-status.is-FAILED {
+  background-color: #f99;
 }

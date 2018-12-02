@@ -1,0 +1,23 @@
+.GameSettings,
+.GameSettings-input,
+.GameSettings-submit {
+  font-size: 1.2rem;
+  line-height: 1.4rem;
+}
+
+.GameSettings-label {
+  margin-left: 1rem;
+}
+
+.GameSettings-input {
+  width: 3rem;
+  margin: 0.2rem;
+  border-radius: 0.3rem;
+  border: 1px solid #ccc;
+}
+
+.GameSettings-submit {
+  margin-left: 0.3rem;
+  border-radius: 0.3rem;
+  background-color: white;
+}

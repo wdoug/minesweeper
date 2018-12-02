@@ -4,19 +4,19 @@ import GameSettings, { GameSettingsProps } from '../GameSettings';
 import { MAX_X_DIM, MAX_Y_DIM } from '../config';
 
 function setWidth(container: HTMLElement, value: number | string) {
-  const input = getByLabelText(container, 'width') as HTMLInputElement;
+  const input = getByLabelText(container, /width/) as HTMLInputElement;
   fireEvent.change(input, { target: { value, name: 'xDim' } });
   return input;
 }
 function setHeight(container: HTMLElement, value: number | string) {
-  const input = getByLabelText(container, 'height') as HTMLInputElement;
+  const input = getByLabelText(container, /height/) as HTMLInputElement;
   fireEvent.change(input, { target: { value, name: 'yDim' } });
   return input;
 }
 function setNumBombs(container: HTMLElement, value: number | string) {
   const input = getByLabelText(
     container,
-    'number of bombs'
+    /number of bombs/
   ) as HTMLInputElement;
   fireEvent.change(input, { target: { value, name: 'numBombs' } });
   return input;
