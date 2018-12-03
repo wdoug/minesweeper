@@ -1,6 +1,8 @@
 ![](https://travis-ci.com/wdoug/minesweeper.svg?branch=master)
 # Minesweeper
 
+> The deployed version of this project can be found [here](https://wdoug-minesweeper.netlify.com/)
+
 ## Setup
 1. Clone this repo and cd into the root directory
 2. Install [nodejs](https://nodejs.org/en/) version 10.13.0
