@@ -185,7 +185,7 @@ Array [
   });
 });
 
-describe('createNewBoard', () => {
+describe('createNewBoardWithBombs', () => {
   beforeEach(() => {
     deterministicRandomNumbers();
   });

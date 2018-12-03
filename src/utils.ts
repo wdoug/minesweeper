@@ -2,7 +2,6 @@ export type Board = Array<Array<number | string>>;
 
 /**
  * Creates a new array with incrementing values from 0 to n - 1
- * @param {number} n
  */
 export function range(n: number) {
   return [...Array(n).keys()];
@@ -12,8 +11,6 @@ export const BOMB_KEY = '💣';
 
 /**
  * Creates a new board of xDim by yDim dimensions initialized to all 0s
- * @param {number} xDim
- * @param {number} yDim
  */
 export function createEmptyBoard(xDim: number, yDim: number) {
   return range(yDim).map(() => range(xDim).map(() => 0));
@@ -21,7 +18,6 @@ export function createEmptyBoard(xDim: number, yDim: number) {
 
 /**
  * Makes a new copy of a board
- * @param {Array<Array<number|string>>} board
  */
 export function copyBoard<T>(board: T[][]) {
   return board.map(row => row.map(val => val));
@@ -30,10 +26,6 @@ export function copyBoard<T>(board: T[][]) {
 /**
  * Iterates through the (up to 3x3) grid of surrounding cells including itself.
  * Calls the provided function with the value of the cell and the location
- * @param {Array<Array<number|string>>} board
- * @param {number} x
- * @param {number} y
- * @param {Function} fn
  */
 export function forEachSurroundingCell(
   board: Board,
@@ -59,10 +51,6 @@ export function forEachSurroundingCell(
  * By default it does not mutate the original board but returns a
  * new one with the updates. The mutate argument allows mutating the
  * original board instead
- * @param {Array<Array<number|string>>} board
- * @param {number} x
- * @param {number} y
- * @param {boolean} mutate
  */
 export function addBombToBoard(
   board: Board,
@@ -108,8 +96,6 @@ export function addBombToBoard(
 
 /**
  * Returns a randomly shuffled version of an array (immutable by default)
- * @param {Array} arr
- * @param {boolean} mutate
  */
 export function shuffle(arr: any[], mutate = false) {
   if (!mutate) {
@@ -135,9 +121,6 @@ export function shuffle(arr: any[], mutate = false) {
 
 /**
  * Returns a new board with `numBombs` randomly placed bombs
- * @param {number} xDim
- * @param {number} yDim
- * @param {number} numBombs
  */
 export function createNewBoardWithBombs(
   xDim: number,

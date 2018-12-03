@@ -75,6 +75,7 @@ describe('Board funcionality', () => {
     expect(countRevealedCards()).toBe(0);
     expect(utils.createNewBoardWithBombs).toHaveBeenLastCalledWith(4, 3, 3);
   });
+
   it('reveals the cards when clicked', () => {
     const { getCard, clickCard, countRevealedCards } = renderBoard();
 
