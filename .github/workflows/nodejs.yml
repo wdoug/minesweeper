@@ -31,4 +31,9 @@ jobs:
       uses: coverallsapp/github-action@v1.1.1
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: CodeClimate Quality coverate report
+      uses: MartinNuc/codeclimate-action@2
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_REPORTER_ID }}
 
