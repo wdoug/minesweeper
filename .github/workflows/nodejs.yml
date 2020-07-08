@@ -32,8 +32,10 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         
-    - name: CodeClimate Quality coverate report
-      uses: MartinNuc/codeclimate-action@2
+    - name: Test & publish code coverage
+      uses: paambaati/codeclimate-action@v2.6.0
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_REPORTER_ID }}
+      with:
+        coverageCommand: echo "coverage should already exist"
 
