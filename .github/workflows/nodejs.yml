@@ -38,4 +38,5 @@ jobs:
         CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_REPORTER_ID }}
       with:
         coverageCommand: npm test -- --coverage
+        debug: true
 
