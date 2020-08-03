@@ -75,7 +75,11 @@ class Board extends React.Component<BoardProps, BoardState> {
 
   _addCheats = () => {
     window.cheat = window.cheat || {};
+    console.log(
+      'Just testing how coverage reports work with covered code here'
+    );
     window.cheat.printBoard = () => {
+      console.log('Testing uncovered code coverage here');
       // eslint-disable-next-line no-console
       console.log(
         this.state.board
