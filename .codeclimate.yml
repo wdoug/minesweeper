@@ -10,5 +10,5 @@ plugins:
         - .ts
         - .tsx
     checks:
-      @typescript-eslint/indent:
+      '@typescript-eslint/indent':
         enabled: false
