@@ -4,6 +4,7 @@ plugins:
     channel: 'eslint-5'
     config:
       config: .eslintrc.json
+      ignore_warnings: true
       extensions:
         - .js
         - .ts
