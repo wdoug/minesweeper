@@ -15,11 +15,8 @@ jobs:
         uses: mshick/add-pr-comment@v1
         with:
           message: |
-            This pull request includes a change to the `package-lock.json` without 
-            a corresponding change to the `package-lock.json` file. This is generally 
-            a sign that your node_modules are out of sync with what is defined in this
-            repo. Unless this is an intentional change (for example, a result of 
-            running `npm audit fix`), please revert your changes to `package-lock.json`
-            and then reset your node_modules with `npm ci`. 
+            ⚠️ **This pull request includes a change to the `package-lock.json` without a corresponding change to the `package-lock.json` file.** ⚠️ 
+            
+            This is generally a sign that your node_modules are out of sync with what is defined in this repo. Unless this is an intentional change (for example, a result of running `npm audit fix`), please revert your changes to `package-lock.json` and then reset your node_modules with `npm ci`. 
           repo-token: ${{ secrets.GITHUB_TOKEN }}
   
