@@ -2,21 +2,42 @@ name: Check for unexpected package-lock.json changes
 
 on:
   # NOTE: Consider using pull_request_target instead to support fork PRs (see: https://github.com/mshick/add-pr-comment/issues/25)
-  pull_request:
-    paths:
-      - 'package-lock.json'
-      - '!package.json'
+  pull_request
 
 jobs:
-  test:
+  # JOB to run file change detection
+  # Setting this up as its own job means we can have multiple subsequent jobs
+  # conditionally run based on file changes
+  file_changes:
+    runs-on: ubuntu-latest
+    # Set job outputs to values from filter step
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+    # For pull requests it's not necessary to checkout the code
+    # Note: Using this instead of just github action pull_request.paths because
+    # this is more powerful for our purposes
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          package-lock-no-package:
+            - 'package-lock.json'
+            - '!package.json'
+
+  # JOB to build and test backend code
+  unexpected-package-lock:
+    needs: file_changes
+    if: ${{ needs.file_changes.outputs.package-lock-no-package == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Question package-lock.json change without package.json change
         uses: mshick/add-pr-comment@v1
         with:
           message: |
-            ⚠️ **This pull request includes changes to the `package-lock.json` but no change to the `package.json` file.** ⚠️ 
+            ⚠️ **This pull request includes changes to the `package-lock.json` but no change to the `package.json` file.** ⚠️
 
             This is generally a sign that your local node_modules are out of sync with what is defined in this repo. Unless this is an intentional change (for example, a result of running `npm audit fix`), please revert your changes to `package-lock.json` and then reset your node_modules with `npm ci`.
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-  
+
