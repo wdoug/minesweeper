@@ -1,4 +1,4 @@
-name: Check for unexpected package-lock.json changes
+name: File change actions
 
 on:
   # NOTE: Consider using pull_request_target instead to support fork PRs (see: https://github.com/mshick/add-pr-comment/issues/25)
@@ -12,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     # Set job outputs to values from filter step
     outputs:
-      backend: ${{ steps.filter.outputs.backend }}
-      frontend: ${{ steps.filter.outputs.frontend }}
+      package-lock: ${{ steps.filter.outputs.package-lock }}
+      package-json:  ${{ steps.filter.outputs.package-json }}
     steps:
     # For pull requests it's not necessary to checkout the code
     # Note: Using this instead of just github action pull_request.paths because
@@ -22,14 +22,15 @@ jobs:
       id: filter
       with:
         filters: |
-          package-lock-no-package:
+          package-lock:
             - 'package-lock.json'
-            - '!package.json'
+          package-json:
+            - 'package.json'
 
   # JOB to build and test backend code
   unexpected-package-lock:
     needs: file_changes
-    if: ${{ needs.file_changes.outputs.package-lock-no-package == 'true' }}
+    if: ${{ needs.file_changes.outputs.package-lock == 'true' && needs.file_changes.outputs.package-json == 'false' }}
     runs-on: ubuntu-latest
     steps:
       - name: Question package-lock.json change without package.json change
