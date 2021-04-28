@@ -27,7 +27,6 @@ jobs:
           package-json:
             - 'package.json'
 
-  # JOB to build and test backend code
   unexpected-package-lock:
     needs: file_changes
     if: ${{ needs.file_changes.outputs.package-lock == 'true' && needs.file_changes.outputs.package-json == 'false' }}
