@@ -39,7 +39,7 @@ export function forEachSurroundingCell(
   const xIndexes = [-1, 0, 1].map(i => x + i).filter(i => i >= 0 && i < xDim);
   const yIndexes = [-1, 0, 1].map(j => y + j).filter(j => j >= 0 && j < yDim);
   for (let j of yIndexes) {
-    for (let i of xIndexes) {
+    for (const i of xIndexes) {
       fn(board[j][i], i, j);
     }
   }
@@ -143,8 +143,8 @@ export function createNewBoardWithBombs(
   bombOrder = shuffle(bombOrder);
 
   let valueIdx = 0;
-  for (let j of range(yDim)) {
-    for (let i of range(xDim)) {
+  for (const j of range(yDim)) {
+    for (const i of range(xDim)) {
       if (bombOrder[valueIdx] === BOMB_KEY) {
         addBombToBoard(boardWithBombs, i, j, true);
       }
