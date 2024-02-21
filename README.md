@@ -1,6 +1,13 @@
 ![](https://travis-ci.com/wdoug/minesweeper.svg?branch=master)
 # Minesweeper
 
+> ## NOTE: This example project is currently outdated.
+> It was originally written at the end of 2018 when the ecosystem was quite different. I haven't gotten around to updating it yet, but here are a few notes on what I would change if I had time:
+> - Rewrite React class components as functional components with [React hooks](https://react.dev/reference/react/hooks) (these weren't released until February 2019)
+> - Replace Create React App with [Vite](https://vitejs.dev/) or another alternative if backend features might be wanted (for context, see [this comment](https://github.com/reactjs/react.dev/pull/5487#issuecomment-1409720741))
+> - Upgrade all libraries and tools
+> - Integrate [typescript-eslint](https://typescript-eslint.io/) with the [strict-type-checked](https://typescript-eslint.io/users/configs#strict-type-checked) config
+
 > The deployed version of this project can be found [here](https://wdoug-minesweeper.netlify.com/)
 
 ## Setup
@@ -47,6 +54,7 @@ React is the most popular web framework today with a huge community and strong i
 
 #### Setup => Create React App
 While React can be used by [just adding a few script tags to an html page](https://reactjs.org/docs/add-react-to-a-website.html#add-react-in-one-minute), most developers opt to use tools such as [webpack](https://webpack.js.org/) for bundling assets together and [babel](https://babeljs.io/) for compiling new javascript features and special syntax like [JSX](https://reactjs.org/docs/introducing-jsx.html) to earlier supported versions of javascript. These tools provide several benefits including an improved developer experience. Configuring and maintaining the setup for these and other tools can be a hassle. As a result, there are several projects that help simplify and abstract this setup. Facebook has one such project called [Create React App](https://facebook.github.io/create-react-app/) that is great for single page apps. This project was bootstrapped with this tool to take advantage of the excellent abstraction of the numerous features that it provides.
+> NOTE: As shared at the top of this readme, Create React App is [no longer a recommended choice](https://github.com/reactjs/react.dev/pull/5487#issuecomment-1409720741)
 
 ### Package Management => npm
 There are several tools for managing node packages. The two most popular competing options today are [npm](https://www.npmjs.com/) and [yarn](https://yarnpkg.com/en/). The functionality of these two tools is quite similar at this point in time and since this project is unlikely to run into the cases where yarn would either be necessary or make a significant improvement this project currently uses npm as it is the default package manager that is already installed with node, which means a simpler setup overall. This could also easily be changed in the future.
