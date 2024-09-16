@@ -63,27 +63,13 @@ class Board extends React.Component<BoardProps, BoardState> {
 
     this.timeoutIds = [];
     this.state = getInitialState(props);
-    this._addCheats();
   }
 
   componentDidUpdate(prevProps: BoardProps) {
     if (prevProps.gameKey !== this.props.gameKey) {
       this.setState(getInitialState(this.props));
     }
-    this._addCheats();
   }
-
-  _addCheats = () => {
-    window.cheat = window.cheat || {};
-    window.cheat.printBoard = () => {
-      // eslint-disable-next-line no-console
-      console.log(
-        this.state.board
-          .map(row => row.map(v => (v === BOMB_KEY ? 'X' : v)).join(' '))
-          .join('\n')
-      );
-    };
-  };
 
   _revealCard = (x: number, y: number) => {
     this._revealCards([[x, y]]);
