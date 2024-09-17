@@ -1,0 +1,14 @@
+plugins:
+  eslint:
+    enabled: true
+    channel: 'eslint-5'
+    config:
+      config: .eslintrc
+      ignore_warnings: true
+      extensions:
+        - .js
+        - .ts
+        - .tsx
+    checks:
+      '@typescript-eslint/indent':
+        enabled: false
